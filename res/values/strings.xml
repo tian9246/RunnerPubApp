@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RunnerPubApp</string>
+    <string name="menu_action_start">Start</string>    
+    <string name="menu_action_stop">Stop</string>
+    <string name="menu_action_upload_recoder">UploadRecoder</string>
+    <string name="menu_action_clear_recoder">ClearRecoder</string>
+    
+</resources>
