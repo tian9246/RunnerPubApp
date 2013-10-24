@@ -9,6 +9,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,8 +29,8 @@ public class TrackerUtil {
     public final LocationListener locationChangeListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {// 当监听到位置变化时回调
-            if (location != null) {               
-                Datasource.getInstance().insertLocation(location);
+            if (location != null) {
+                onLocationChanged(location);
             }
         }
 
@@ -39,13 +40,14 @@ public class TrackerUtil {
         }
 
         public void onProviderEnabled(String provider) {
-            showToast("GPS IS ENABLED...");
+
         }
 
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e("onStatusChanged",status+"");
-            sendHandlerMessage(MainActivity.SIG_START_TIMER, "");
-            
+            if (status == LocationProvider.AVAILABLE) {
+                sendHandlerMessage(MainActivity.SIG_GPS_READY, "");
+                sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE,"GPS IS READY");
+            }
         }
     };
 
@@ -58,7 +60,11 @@ public class TrackerUtil {
      * 
      * @param location
      */
-    public void setCurrentLocation(Location location) {
+    public void onLocationChanged(Location location) {
+        if (runningState) {
+            Datasource.getInstance().insertLocation(location);
+            sendHandlerMessage(MainActivity.SIG_UPDATE_DISTANCE_SHOW,"");
+        }
 
     }
 
@@ -122,20 +128,26 @@ public class TrackerUtil {
     }
 
     /**
-     * @return GPS是否已经打开
+     * 预热GPS功能
      */
-    public boolean startTracker() {
+    public void initGPS() {
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showToast("Please turn on your GPS");
             sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE, "GPS NOT ENABLE!");
-            sendHandlerMessage(MainActivity.SIG_SET_BUTTON_START, null);
-            return false;
-        } else {
-            runningState = true;
+            sendHandlerMessage(MainActivity.SIG_GPS_NOT_ENABLE, null);
+
+        } else {            
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     TIME_INTEVAL, 0, locationChangeListener);
             sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE, "WAITTING FOR YOUR GPS...");
         }
-        return true;
+    }
+
+    /**
+     * @return GPS是否已经打开
+     */
+    public void startTracker() {
+        runningState = true;       
     }
 
     public boolean isRunningState() {
@@ -143,15 +155,22 @@ public class TrackerUtil {
     }
 
     public void stopTracker() {
+        runningState = false;
+    }
+
+    /**
+     * 祛除GPS跟踪
+     */
+    public void removeGPS() {
         locationManager.removeUpdates(locationChangeListener);
         runningState = false;
     }
-    
+
     /**
      * 上传记录
      */
-    public void updateRecoder(){
-        
+    public void updateRecoder() {
+
     }
 
 }
