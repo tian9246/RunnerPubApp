@@ -3,8 +3,6 @@ package com.azuisapp.runner.util;
 
 import java.util.ArrayList;
 
-import com.azuisapp.runner.activity.MainActivity;
-
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,6 +13,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.azuisapp.runner.activity.MainActivity;
+import com.azuisapp.runner.bean.UploadRecoder;
 
 public class TrackerUtil {
     /* 时间间隔 */
@@ -30,7 +31,7 @@ public class TrackerUtil {
         @Override
         public void onLocationChanged(Location location) {// 当监听到位置变化时回调
             if (location != null) {
-                onLocationChanged(location);
+                onLocationChange(location);
             }
         }
 
@@ -50,24 +51,7 @@ public class TrackerUtil {
             }
         }
     };
-
-    public void showToast(String content) {
-        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 插入节点信息
-     * 
-     * @param location
-     */
-    public void onLocationChanged(Location location) {
-        if (runningState) {
-            Datasource.getInstance().insertLocation(location);
-            sendHandlerMessage(MainActivity.SIG_UPDATE_DISTANCE_SHOW,"");
-        }
-
-    }
-
+    
     private TrackerUtil() {
 
     }
@@ -83,6 +67,36 @@ public class TrackerUtil {
         return mInstance;
     }
 
+    
+    public  UploadRecoder getUploadRecoder(){
+        ArrayList<Location> locations = Datasource.getInstance().getAllLocation();
+        UploadRecoder recoder = new UploadRecoder();
+        recoder.distance = getAllDistance();
+        recoder.starttime = locations.get(0).getTime();
+        recoder.endtime = locations.get(locations.size()).getTime();
+        
+        return recoder;
+        
+    }
+
+    public void showToast(String content) {
+        Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 插入节点信息
+     * 
+     * @param location
+     */
+    public void onLocationChange(Location location) {
+        if (runningState) {
+            Datasource.getInstance().insertLocation(location);
+            sendHandlerMessage(MainActivity.SIG_UPDATE_DISTANCE_SHOW,"");
+        }
+
+    }
+
+   
     /**
      * 设置 context 初始化locationManager
      * 
