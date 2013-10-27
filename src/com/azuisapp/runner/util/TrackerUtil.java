@@ -220,7 +220,8 @@ public class TrackerUtil {
         if (uploadinfo != null) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("method", "upload");
-            HttpJsonProxy.getProxyBuilder().setAction(Action.GET)
+            map.put("uploadinfo", uploadinfo);
+            HttpJsonProxy.getProxyBuilder().setAction(Action.POST)
                     .setOnSuccessListener(onJsonSuccessReturnListener)
                     .setURL(Applications.BASE_URL).setClassOfT(ResultInfo.class)
                     .setRequestParams(map).execute();
