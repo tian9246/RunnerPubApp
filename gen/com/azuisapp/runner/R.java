@@ -26,6 +26,7 @@ public final class R {
     public static final class id {
         public static final int action_clear_recoder=0x7f08000b;
         public static final int action_forgot_password=0x7f08000a;
+        public static final int action_logout=0x7f08000e;
         public static final int action_stop=0x7f08000c;
         public static final int action_upload=0x7f08000d;
         public static final int activity_button=0x7f080009;
@@ -48,24 +49,25 @@ public final class R {
         public static final int main=0x7f070001;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f05000a;
-        public static final int action_sign_in_register=0x7f050008;
-        public static final int action_sign_in_short=0x7f050009;
+        public static final int action_offline_mode=0x7f05000b;
+        public static final int action_sign_in_register=0x7f050009;
+        public static final int action_sign_in_short=0x7f05000a;
         public static final int app_name=0x7f050000;
-        public static final int error_field_required=0x7f05000f;
-        public static final int error_incorrect_password=0x7f05000e;
-        public static final int error_invalid_email=0x7f05000c;
-        public static final int error_invalid_password=0x7f05000d;
-        public static final int login_progress_signing_in=0x7f05000b;
-        public static final int menu_action_clear_recoder=0x7f050004;
+        public static final int error_field_required=0x7f050010;
+        public static final int error_incorrect_password=0x7f05000f;
+        public static final int error_invalid_email=0x7f05000d;
+        public static final int error_invalid_password=0x7f05000e;
+        public static final int login_progress_signing_in=0x7f05000c;
+        public static final int menu_action_clear_recoder=0x7f050005;
+        public static final int menu_action_logout=0x7f050004;
         public static final int menu_action_start=0x7f050001;
         public static final int menu_action_stop=0x7f050002;
         public static final int menu_action_upload_recoder=0x7f050003;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f050006;
-        public static final int prompt_password=0x7f050007;
-        public static final int title_activity_login=0x7f050005;
+        public static final int prompt_email=0x7f050007;
+        public static final int prompt_password=0x7f050008;
+        public static final int title_activity_login=0x7f050006;
     }
     public static final class style {
         /** 

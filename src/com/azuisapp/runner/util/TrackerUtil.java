@@ -2,6 +2,8 @@
 package com.azuisapp.runner.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.location.Location;
@@ -15,7 +17,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.azuisapp.runner.activity.MainActivity;
+import com.azuisapp.runner.app.Applications;
+import com.azuisapp.runner.bean.ResultInfo;
 import com.azuisapp.runner.bean.UploadRecoder;
+import com.azuisapp.runner.net.HttpJsonProxy;
+import com.azuisapp.runner.net.IHttpProxy.Action;
+import com.azuisapp.runner.net.OnJsonSuccessReturnListener;
+import com.google.gson.Gson;
 
 public class TrackerUtil {
     /* 时间间隔 */
@@ -47,11 +55,11 @@ public class TrackerUtil {
         public void onStatusChanged(String provider, int status, Bundle extras) {
             if (status == LocationProvider.AVAILABLE) {
                 sendHandlerMessage(MainActivity.SIG_GPS_READY, "");
-                sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE,"GPS IS READY");
+                sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE, "GPS IS READY");
             }
         }
     };
-    
+
     private TrackerUtil() {
 
     }
@@ -67,18 +75,26 @@ public class TrackerUtil {
         return mInstance;
     }
 
-    
-    public  UploadRecoder getUploadRecoder(){
+    /**
+     * 获取需要上传的信息
+     * 
+     * @return
+     */
+    private UploadRecoder getUploadRecoder() {
         ArrayList<Location> locations = Datasource.getInstance().getAllLocation();
         UploadRecoder recoder = new UploadRecoder();
         recoder.distance = getAllDistance();
         recoder.starttime = locations.get(0).getTime();
         recoder.endtime = locations.get(locations.size()).getTime();
-        
         return recoder;
-        
+
     }
 
+    /**
+     * 显示toast
+     * 
+     * @param content
+     */
     public void showToast(String content) {
         Toast.makeText(context, content, Toast.LENGTH_SHORT).show();
     }
@@ -91,16 +107,16 @@ public class TrackerUtil {
     public void onLocationChange(Location location) {
         if (runningState) {
             Datasource.getInstance().insertLocation(location);
-            sendHandlerMessage(MainActivity.SIG_UPDATE_DISTANCE_SHOW,"");
+            sendHandlerMessage(MainActivity.SIG_UPDATE_DISTANCE_SHOW, "");
         }
 
     }
 
-   
     /**
      * 设置 context 初始化locationManager
      * 
      * @param context
+     * @param handler
      */
     public void setContextAndInit(Context context, Handler handler) {
         this.context = context;
@@ -110,7 +126,9 @@ public class TrackerUtil {
     }
 
     /**
-     * @return the unit is metter
+     * 获取总距离
+     * 
+     * @return 单位是米
      */
     public Double getAllDistance() {
         ArrayList<Location> locations = Datasource.getInstance().getAllLocation();
@@ -134,6 +152,12 @@ public class TrackerUtil {
         return distance;
     }
 
+    /**
+     * 通过handler返回到主线程信息
+     * 
+     * @param what
+     * @param content
+     */
     private void sendHandlerMessage(int what, String content) {
         Message msg = handler.obtainMessage();
         msg.what = what;
@@ -150,7 +174,7 @@ public class TrackerUtil {
             sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE, "GPS NOT ENABLE!");
             sendHandlerMessage(MainActivity.SIG_GPS_NOT_ENABLE, null);
 
-        } else {            
+        } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                     TIME_INTEVAL, 0, locationChangeListener);
             sendHandlerMessage(MainActivity.SIG_SHOW_MESSAGE, "WAITTING FOR YOUR GPS...");
@@ -161,7 +185,7 @@ public class TrackerUtil {
      * @return GPS是否已经打开
      */
     public void startTracker() {
-        runningState = true;       
+        runningState = true;
     }
 
     public boolean isRunningState() {
@@ -176,14 +200,31 @@ public class TrackerUtil {
      * 祛除GPS跟踪
      */
     public void removeGPS() {
-        locationManager.removeUpdates(locationChangeListener);
+        try {
+            locationManager.removeUpdates(locationChangeListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         runningState = false;
     }
 
     /**
      * 上传记录
+     * 
+     * @param onJsonSuccessReturnListener
      */
-    public void updateRecoder() {
+    public void updateRecoder(OnJsonSuccessReturnListener onJsonSuccessReturnListener) {
+        UploadRecoder recoder = getUploadRecoder();
+        Gson gson = new Gson();
+        String uploadinfo = gson.toJson(recoder);
+        if (uploadinfo != null) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("method", "upload");
+            HttpJsonProxy.getProxyBuilder().setAction(Action.GET)
+                    .setOnSuccessListener(onJsonSuccessReturnListener)
+                    .setURL(Applications.BASE_URL).setClassOfT(ResultInfo.class)
+                    .setRequestParams(map).execute();
+        }
 
     }
 

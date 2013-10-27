@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,18 +15,18 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.azuisapp.runner.R;
+import com.azuisapp.runner.bean.ResultInfo;
+import com.azuisapp.runner.net.OnJsonSuccessReturnListener;
+import com.azuisapp.runner.util.LoginUtil;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
- 
-
-
-  
 
     // Values for email and password at the time of the login attempt.
     private String mEmail;
@@ -44,7 +45,7 @@ public class LoginActivity extends Activity {
 
         setContentView(R.layout.activity_login);
 
-        // Set up the login form.      
+        // Set up the login form.
         mEmailView = (EditText) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -70,9 +71,9 @@ public class LoginActivity extends Activity {
             }
         });
     }
-    
-    public void initLayout(){
-        
+
+    public void initLayout() {
+
     }
 
     @Override
@@ -88,7 +89,6 @@ public class LoginActivity extends Activity {
      * errors are presented and no actual login attempt is made.
      */
     public void attemptLogin() {
-      
 
         // Reset errors.
         mEmailView.setError(null);
@@ -128,12 +128,46 @@ public class LoginActivity extends Activity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-            showProgress(true);
-       
+            loginAction(mEmail, mPassword);
+
         }
+    }
+
+    /**
+     * 尝试登陆
+     */
+    private void loginAction(String username, String password) {
+        LoginUtil.getInstance().login(username, password, new OnJsonSuccessReturnListener() {
+
+            @Override
+            public void onSuccess(Object objDeserialized) {
+                ResultInfo result = (ResultInfo) objDeserialized;
+                handleResult(result);
+            }
+
+        });
+    }
+
+    /**
+     * 处理尝试登陆的回调结果
+     * 
+     * @param result
+     */
+    private void handleResult(ResultInfo result) {
+        if (result.resultBoolean) {
+            LoginUtil.getInstance().saveLoginInfo();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            this.finish();
+        } else {
+            showToast("Login fail:" + result.resultInfo);
+            showProgress(false);
+        }
+
+    }
+
+    private void showToast(String content) {
+        Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -176,5 +210,4 @@ public class LoginActivity extends Activity {
         }
     }
 
-   
 }

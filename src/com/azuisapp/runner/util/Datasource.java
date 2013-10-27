@@ -87,6 +87,9 @@ public class Datasource {
         db.insert(DBOpenHelper.TABLE_RECODER, null, values);
     }
 
+    /**
+     * 关闭数据库
+     */
     public void cleanup() {
         if (this.db != null && db.isOpen()) {
             this.db.close();
