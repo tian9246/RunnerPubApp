@@ -147,13 +147,13 @@ public class HttpJsonProxy extends HttpProxy {
         responseHandler = new AsyncHttpResponseHandler() {
             @Override
             public void onStart() {
-             
+                onSuccessListener.onStart();
                 super.onStart();
             }
 
             @Override
             public void onFinish() {
-              
+                onSuccessListener.onFinish();
                 super.onFinish();
             }
 

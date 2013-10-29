@@ -50,7 +50,7 @@ public class HttpProxy implements IHttpProxy {
     protected Action action;
     protected RequestParams params;
     protected NetWorkFailListener resultListerer;
-    protected OnSuccessListener onSuccessListener;
+    protected OnStatusChangedListener onSuccessListener;
     protected AsyncHttpResponseHandler responseHandler;
     protected String requestMethod;
     protected Handler mHandler;
@@ -180,7 +180,7 @@ public class HttpProxy implements IHttpProxy {
     /**
      * 自定义获取数据成功后的回调
      */
-    public HttpProxy setOnSuccessListener(OnSuccessListener onSuccessListener) {
+    public HttpProxy setOnSuccessListener(OnStatusChangedListener onSuccessListener) {
         this.onSuccessListener = onSuccessListener;
         return this;
     }
@@ -226,10 +226,22 @@ public class HttpProxy implements IHttpProxy {
         HttpProxy client = new HttpProxy();
         client.action = Action.POST;
         client.params = new RequestParams();
-        client.onSuccessListener = new OnSuccessListener() {
+        client.onSuccessListener = new OnStatusChangedListener() {
             @Override
             public boolean onSuccess(String responseString) {
                 return true;
+            }
+
+            @Override
+            public void onStart() {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onFinish() {
+                // TODO Auto-generated method stub
+                
             }
         };
         return client;
@@ -274,15 +286,13 @@ public class HttpProxy implements IHttpProxy {
 
             @Override
             public void onStart() {
-                showLoadingProgress();
-
+                onSuccessListener.onStart();
                 super.onStart();
             }
 
             @Override
             public void onFinish() {
-                hideLoadingProgress();
-
+                onSuccessListener.onFinish();
                 super.onFinish();
             }
 
@@ -405,7 +415,7 @@ public class HttpProxy implements IHttpProxy {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
-    public interface OnSuccessListener {
+    public interface OnStatusChangedListener {
         /**
          * 请求成功后（200）回调
          * 
@@ -413,6 +423,10 @@ public class HttpProxy implements IHttpProxy {
          * @return 是否向下执行 t=继续向下执行
          */
         public boolean onSuccess(String responseString);
+        
+        public void onStart();
+        
+        public void onFinish();
 
     }
 

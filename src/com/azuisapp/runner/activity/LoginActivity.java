@@ -144,6 +144,17 @@ public class LoginActivity extends Activity {
                 ResultInfo result = (ResultInfo) objDeserialized;
                 handleResult(result);
             }
+            
+            public void onStart() {
+                showProgress(true);
+                super.onStart();
+            }
+
+            @Override
+            public void onFinish() {
+                showProgress(false);
+                super.onFinish();
+            }
 
         });
     }
@@ -160,7 +171,7 @@ public class LoginActivity extends Activity {
             startActivity(intent);
             this.finish();
         } else {
-            showToast("Login fail:");
+            showToast("Login fail!");
             showProgress(false);
         }
 

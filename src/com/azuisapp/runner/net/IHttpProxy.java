@@ -2,7 +2,7 @@ package com.azuisapp.runner.net;
 
 import java.util.Map;
 
-import com.azuisapp.runner.net.HttpProxy.OnSuccessListener;
+import com.azuisapp.runner.net.HttpProxy.OnStatusChangedListener;
 
 public interface IHttpProxy {
 	/**
@@ -23,7 +23,7 @@ public interface IHttpProxy {
 
 	public IHttpProxy setResultListerer(NetWorkFailListener resultListerer);
 
-	public IHttpProxy setOnSuccessListener(OnSuccessListener onSuccessListener);	
+	public IHttpProxy setOnSuccessListener(OnStatusChangedListener onSuccessListener);	
 
 	public IHttpProxy setRequestParams(Map<String, String> source) ;	
 	

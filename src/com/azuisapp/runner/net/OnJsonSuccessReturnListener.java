@@ -12,5 +12,17 @@ public abstract class OnJsonSuccessReturnListener {
     public void onNetworkFail(Throwable error, String content){
         
     }
+    
+  
+    public void onStart() {
+        // TODO Auto-generated method stub
+        
+    }
+
+   
+    public void onFinish() {
+        // TODO Auto-generated method stub
+        
+    }
 
 }
