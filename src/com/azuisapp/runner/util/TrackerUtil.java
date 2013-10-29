@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.azuisapp.runner.activity.MainActivity;
 import com.azuisapp.runner.app.Applications;
 import com.azuisapp.runner.bean.ResultInfo;
-import com.azuisapp.runner.bean.UploadRecoder;
+import com.azuisapp.runner.bean.UploadRecord;
 import com.azuisapp.runner.net.HttpJsonProxy;
 import com.azuisapp.runner.net.IHttpProxy.Action;
 import com.azuisapp.runner.net.OnJsonSuccessReturnListener;
@@ -80,9 +80,9 @@ public class TrackerUtil {
      * 
      * @return
      */
-    private UploadRecoder getUploadRecoder() {
+    private UploadRecord getUploadRecord() {
         ArrayList<Location> locations = Datasource.getInstance().getAllLocation();
-        UploadRecoder recoder = new UploadRecoder();
+        UploadRecord recoder = new UploadRecord();
         recoder.distance = 34885.5d;//getAllDistance();
         recoder.starttime = 1500508548;//locations.get(0).getTime();
         recoder.endtime = 1500508588l;//ocations.get(locations.size()).getTime();
@@ -213,8 +213,8 @@ public class TrackerUtil {
      * 
      * @param onJsonSuccessReturnListener
      */
-    public void updateRecoder(OnJsonSuccessReturnListener onJsonSuccessReturnListener) {
-        UploadRecoder recoder = getUploadRecoder();
+    public void updateRecord(OnJsonSuccessReturnListener onJsonSuccessReturnListener) {
+        UploadRecord recoder = getUploadRecord();
         Gson gson = new Gson();
         String uploadinfo = gson.toJson(recoder);
         if (uploadinfo != null) {           

@@ -142,13 +142,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case android.R.id.home:
                 break;
             case R.id.action_clear_recoder:
-                clearRecoder();
+                clearRecord();
                 break;
             case R.id.action_stop:
                 stopTracker();
                 break;
             case R.id.action_upload:
-                uploadRecoder();
+                uploadRecord();
                 break;
             case R.id.action_logout:
                 logout();
@@ -213,7 +213,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
     }
 
-    public void clearRecoder() {
+    public void clearRecord() {
         Datasource.getInstance().clearAllLocation();
     }
 
@@ -234,10 +234,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /**
      * 上传记录信息
      */
-    public void uploadRecoder() {
+    public void uploadRecord() {
         Double distance = TrackerUtil.getInstance().getAllDistance();
         if (distance >= 0) {
-            TrackerUtil.getInstance().updateRecoder(new OnJsonSuccessReturnListener() {
+            TrackerUtil.getInstance().updateRecord(new OnJsonSuccessReturnListener() {
                 @Override
                 public void onSuccess(Object objDeserialized) {
                     ResultInfo result = (ResultInfo) objDeserialized;
@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     private void handleUploadResult(ResultInfo result) {
         if (result.status.equals("success")) {
-            showMessage("Upload Recoder Successed!");
+            showMessage("Upload Record Successed!");
         } else {
             showMessage("Upload Fail~");
         }

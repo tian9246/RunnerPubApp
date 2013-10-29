@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import com.azuisapp.runner.app.Applications;
 import com.azuisapp.runner.bean.LoginInfo;
 import com.azuisapp.runner.bean.ResultInfo;
-import com.azuisapp.runner.bean.UploadRecoder;
+import com.azuisapp.runner.bean.UploadRecord;
 import com.azuisapp.runner.net.HttpJsonProxy;
 import com.azuisapp.runner.net.IHttpProxy.Action;
 import com.azuisapp.runner.net.OnJsonSuccessReturnListener;
@@ -74,12 +74,12 @@ public class LoginUtil {
     }
 
     /**
-     * 对UploadRecoder设置用户名密码
+     * 对UploadRecord设置用户名密码
      * 
      * @param recoder
      * @return
      */
-    public UploadRecoder getUserAndPass(UploadRecoder recoder) {
+    public UploadRecord getUserAndPass(UploadRecord recoder) {
         recoder.email = username;
         recoder.password = password;
         return recoder;
