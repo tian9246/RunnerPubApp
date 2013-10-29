@@ -106,7 +106,7 @@ public class LoginActivity extends Activity {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
-        } else if (mPassword.length() < 4) {
+        } else if (mPassword.length() < 3) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -154,20 +154,20 @@ public class LoginActivity extends Activity {
      * @param result
      */
     private void handleResult(ResultInfo result) {
-        if (result.resultBoolean) {
+        if (result.status.equals("success")) {
             LoginUtil.getInstance().saveLoginInfo();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             this.finish();
         } else {
-            showToast("Login fail:" + result.resultInfo);
+            showToast("Login fail:");
             showProgress(false);
         }
 
     }
 
     private void showToast(String content) {
-        Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, content, Toast.LENGTH_LONG).show();
     }
 
     /**

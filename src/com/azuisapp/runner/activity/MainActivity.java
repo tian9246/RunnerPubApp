@@ -256,10 +256,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
      * @param result
      */
     private void handleUploadResult(ResultInfo result) {
-        if (result.resultBoolean) {
+        if (result.status.equals("success")) {
             showMessage("Upload Recoder Successed!");
         } else {
-            showMessage("Upload Fail:" + result.resultInfo);
+            showMessage("Upload Fail~");
         }
     }
 

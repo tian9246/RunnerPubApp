@@ -83,9 +83,9 @@ public class TrackerUtil {
     private UploadRecoder getUploadRecoder() {
         ArrayList<Location> locations = Datasource.getInstance().getAllLocation();
         UploadRecoder recoder = new UploadRecoder();
-        recoder.distance = getAllDistance();
-        recoder.starttime = locations.get(0).getTime();
-        recoder.endtime = locations.get(locations.size()).getTime();
+        recoder.distance = 34885.5d;//getAllDistance();
+        recoder.starttime = 1500508548;//locations.get(0).getTime();
+        recoder.endtime = 1500508588l;//ocations.get(locations.size()).getTime();
         return recoder;
 
     }
@@ -217,14 +217,11 @@ public class TrackerUtil {
         UploadRecoder recoder = getUploadRecoder();
         Gson gson = new Gson();
         String uploadinfo = gson.toJson(recoder);
-        if (uploadinfo != null) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("method", "upload");
-            map.put("uploadinfo", uploadinfo);
+        if (uploadinfo != null) {           
             HttpJsonProxy.getProxyBuilder().setAction(Action.POST)
                     .setOnSuccessListener(onJsonSuccessReturnListener)
-                    .setURL(Applications.BASE_URL).setClassOfT(ResultInfo.class)
-                    .setRequestParams(map).execute();
+                    .setURL(Applications.UPLOAD_URL).setClassOfT(ResultInfo.class)
+                    .setEntityInstedForm(true).setEntityString(uploadinfo).execute();
         }
 
     }

@@ -2,7 +2,7 @@
 package com.azuisapp.runner.bean;
 
 public class UploadRecoder {
-    public String username;
+    public String email;
     public String password;
     public Double distance;
     public long starttime;

@@ -24,6 +24,7 @@ public class HttpJsonProxy extends HttpProxy {
     protected Class<?> classOfT;
     protected Type typeOfT;
     protected OnJsonSuccessReturnListener onSuccessListener;
+   
 
     /**
      * 设置发送数据的Handler
@@ -122,6 +123,16 @@ public class HttpJsonProxy extends HttpProxy {
     public HttpJsonProxy setOnSuccessListener(
             OnJsonSuccessReturnListener onSuccessListener) {
         this.onSuccessListener = onSuccessListener;
+        return this;
+    }  
+
+    public HttpJsonProxy setEntityString(String entityString) {
+        this.entityString = entityString;
+        return this;
+    }
+
+    public HttpJsonProxy setEntityInstedForm(boolean entityInstedForm) {
+        this.entityInstedForm = entityInstedForm;
         return this;
     }
 

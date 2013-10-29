@@ -21,8 +21,11 @@ package com.loopj.android.http;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import org.apache.http.Header;
+
 import java.io.IOException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -33,6 +36,7 @@ import org.apache.http.util.EntityUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * Used to intercept and handle the responses from requests made using 
@@ -248,7 +252,7 @@ public class AsyncHttpResponseHandler {
             sendFailureMessage(e, (String) null);
         }
 
-        if(status.getStatusCode() >= 300) {
+        if(status.getStatusCode() >= 300) {Log.e("BAD REQ", status.getStatusCode()+":REQ");
             sendFailureMessage(new HttpResponseException(status.getStatusCode(), status.getReasonPhrase()), responseBody);
         } else {
             sendSuccessMessage(status.getStatusCode(), response.getAllHeaders(), responseBody);
